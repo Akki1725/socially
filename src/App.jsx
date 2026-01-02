@@ -9,10 +9,12 @@ import ChatList from './pages/ChatList';
 import ChatScreen from './pages/ChatScreen';
 import FindPeople from './pages/FindPeople';
 import Navbar from './components/Navbar';
+import { getSocket } from './utils/socket';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -40,6 +42,33 @@ function App() {
     setUser(updatedUser);
   };
 
+  useEffect(() => {
+    if (!user) {
+      setUnreadCount(0);
+      return;
+    }
+
+    const socket = getSocket();
+    
+    const handleNewMessage = (data) => {
+      const userIdStr = user.id || user._id;
+      const participants = data.participants.map(p => p.toString());
+      
+      if (participants.includes(userIdStr)) {
+        const messageSenderId = data.message.sender._id || data.message.sender;
+        if (messageSenderId.toString() !== userIdStr) {
+          setUnreadCount(prev => prev + 1);
+        }
+      }
+    };
+
+    socket.on('newMessage', handleNewMessage);
+
+    return () => {
+      socket.off('newMessage', handleNewMessage);
+    };
+  }, [user]);
+
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -51,7 +80,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
-        <Navbar user={user} onLogout={handleLogout} />
+        <Navbar user={user} onLogout={handleLogout} unreadCount={unreadCount} onMessagesOpen={() => setUnreadCount(0)} />
         <Routes>
           <Route
             path="/signup"
@@ -75,7 +104,7 @@ function App() {
           />
           <Route
             path="/chats"
-            element={user ? <ChatList user={user} /> : <Navigate to="/signin" />}
+            element={user ? <ChatList user={user} onOpen={() => setUnreadCount(0)} /> : <Navigate to="/signin" />}
           />
           <Route
             path="/chat/:otherUserId"

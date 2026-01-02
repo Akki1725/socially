@@ -1,6 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
-export default function Navbar({ user, onLogout }) {
+export default function Navbar({ user, onLogout, unreadCount = 0, onMessagesOpen }) {
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.pathname === '/chats' && onMessagesOpen) {
+      onMessagesOpen();
+    }
+  }, [location.pathname, onMessagesOpen]);
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-10">
       <div className="max-w-4xl mx-auto px-4 py-3">
@@ -19,9 +27,14 @@ export default function Navbar({ user, onLogout }) {
               <>
             <Link
               to="/chats"
-              className="text-gray-700 hover:text-gray-900"
+              className="text-gray-700 hover:text-gray-900 relative"
             >
               Messages
+              {unreadCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                  {unreadCount > 9 ? '9+' : unreadCount}
+                </span>
+              )}
             </Link>
             <Link
               to="/find-people"

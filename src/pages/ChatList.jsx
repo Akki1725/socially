@@ -4,14 +4,17 @@ import { Link } from 'react-router-dom';
 import { chatAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
 
-export default function ChatList({ user }) {
+export default function ChatList({ user, onOpen }) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!user) return;
     loadChats();
-  }, [user]);
+    if (onOpen) {
+      onOpen();
+    }
+  }, [user, onOpen]);
 
   useEffect(() => {
     if (!user) return;
