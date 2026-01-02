@@ -19,15 +19,9 @@ export default function Navbar({ user, onLogout }) {
               <>
                 <Link
                   to="/create"
-                  className="text-gray-700 hover:text-gray-900"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
                 >
                   Create
-                </Link>
-                <Link
-                  to={`/profile/${user.id}`}
-                  className="text-gray-700 hover:text-gray-900"
-                >
-                  Profile
                 </Link>
                 <button
                   onClick={onLogout}
@@ -35,7 +29,10 @@ export default function Navbar({ user, onLogout }) {
                 >
                   Logout
                 </button>
-                <div className="flex items-center gap-2 ml-2 pl-2 border-l border-gray-300">
+                <Link
+                  to={`/profile/${user.id}`}
+                  className="flex items-center gap-2 ml-2 pl-2 border-l border-gray-300 hover:opacity-80"
+                >
                   {user.profilePicture ? (
                     <img
                       src={user.profilePicture}
@@ -52,7 +49,7 @@ export default function Navbar({ user, onLogout }) {
                   <span className="text-sm text-gray-700 font-medium">
                     {user.username}
                   </span>
-                </div>
+                </Link>
               </>
             ) : (
               <>

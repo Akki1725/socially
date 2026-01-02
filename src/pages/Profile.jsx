@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { userAPI } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
 
 export default function Profile({ user: currentUser = null, onUserUpdate }) {
   const { userId } = useParams();
+  const navigate = useNavigate();
   const [profileUser, setProfileUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -112,6 +113,16 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-2xl font-bold mb-2">{profileUser.username}</h1>
             <p className="text-gray-600 mb-4">{profileUser.email}</p>
+            {isOwnProfile && (
+              <div className="mb-4">
+                <button
+                  onClick={() => navigate('/create')}
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
+                >
+                  Create Post
+                </button>
+              </div>
+            )}
             <div className="text-gray-700">
               <span className="font-semibold">{posts.length}</span> posts
             </div>
