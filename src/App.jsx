@@ -124,8 +124,21 @@ function App() {
   };
 
   const updateUser = (updatedUser) => {
-    localStorage.setItem('user', JSON.stringify(updatedUser));
-    setUser(updatedUser);
+    setUser(prevUser => {
+      if (!prevUser) return updatedUser;
+      // Preserve identity fields and merge updated fields
+      const mergedUser = {
+        ...prevUser,
+        profilePicture: updatedUser.profilePicture || prevUser.profilePicture,
+        // Ensure identity fields are never overwritten
+        id: prevUser.id || prevUser._id || updatedUser._id || updatedUser.id,
+        _id: prevUser._id || updatedUser._id,
+        username: prevUser.username || updatedUser.username,
+        email: prevUser.email || updatedUser.email,
+      };
+      localStorage.setItem('user', JSON.stringify(mergedUser));
+      return mergedUser;
+    });
   };
 
   if (loading) {
