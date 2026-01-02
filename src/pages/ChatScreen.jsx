@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { chatAPI, userAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
+import { removeUnreadChatId } from '../utils/unreadChats';
 
 export default function ChatScreen({ user, onChatLoad }) {
   const { otherUserId } = useParams();
@@ -71,6 +72,8 @@ export default function ChatScreen({ user, onChatLoad }) {
       if (onChatLoad && chatData._id) {
         const chatId = chatData._id.toString();
         onChatLoad(chatId);
+        // Clear unread state for this chat
+        removeUnreadChatId(chatId);
       }
     } catch (error) {
       console.error('Failed to load chat:', error);
@@ -148,7 +151,7 @@ export default function ChatScreen({ user, onChatLoad }) {
       {/* Header */}
       <div className="border-b border-gray-200 px-4 py-3 flex items-center gap-3 flex-shrink-0">
         <button
-          onClick={() => navigate('/chats')}
+          onClick={() => navigate(-1)}
           className="text-gray-600 hover:text-gray-900 mr-2"
         >
           <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

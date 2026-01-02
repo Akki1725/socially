@@ -46,6 +46,15 @@ export default function CreatePost({ user }) {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-8">
+      <button
+        onClick={() => navigate(-1)}
+        className="mb-4 flex items-center gap-2 text-gray-600 hover:text-gray-900 transition-colors"
+      >
+        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+        </svg>
+        <span className="text-sm font-medium">Back</span>
+      </button>
       <h1 className="text-2xl font-bold mb-6">Create Post</h1>
       <form onSubmit={handleSubmit} className="bg-white border border-gray-200 rounded-lg p-6">
         {error && (

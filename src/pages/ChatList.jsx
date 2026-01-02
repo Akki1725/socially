@@ -3,15 +3,17 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { chatAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
+import { getUnreadChatIds, addUnreadChatId, removeUnreadChatId, saveUnreadChatIds } from '../utils/unreadChats';
 
 export default function ChatList({ user, onOpen, activeChatId }) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [unreadChatIds, setUnreadChatIds] = useState(new Set());
+  const [unreadChatIds, setUnreadChatIds] = useState(() => getUnreadChatIds());
 
   useEffect(() => {
     if (!user) return;
     loadChats();
+    setUnreadChatIds(getUnreadChatIds());
     if (onOpen) {
       onOpen();
     }
@@ -30,7 +32,8 @@ export default function ChatList({ user, onOpen, activeChatId }) {
       
       // Mark chat as unread if message is from another user and not the active chat
       if (isFromOtherUser && incomingChatId !== activeChatId) {
-        setUnreadChatIds(prev => new Set([...prev, incomingChatId]));
+        const updatedIds = addUnreadChatId(incomingChatId);
+        setUnreadChatIds(updatedIds);
       }
       
       // Update chat list when new message arrives
@@ -129,11 +132,8 @@ export default function ChatList({ user, onOpen, activeChatId }) {
               onClick={() => {
                 // Clear unread state when chat is clicked
                 if (isUnread) {
-                  setUnreadChatIds(prev => {
-                    const next = new Set(prev);
-                    next.delete(chat._id);
-                    return next;
-                  });
+                  const updatedIds = removeUnreadChatId(chat._id);
+                  setUnreadChatIds(updatedIds);
                 }
               }}
               className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
