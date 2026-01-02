@@ -1,5 +1,5 @@
 // Code generated using Cursor AI prompt
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useLayoutEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { chatAPI, userAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
@@ -15,12 +15,14 @@ export default function ChatScreen({ user, onChatLoad }) {
   const [sending, setSending] = useState(false);
   const messagesEndRef = useRef(null);
   const chatContainerRef = useRef(null);
+  const isInitialLoadRef = useRef(true);
 
   useEffect(() => {
     if (!user) {
       navigate('/signin');
       return;
     }
+    isInitialLoadRef.current = true;
     loadChat();
   }, [user, otherUserId]);
 
@@ -53,8 +55,20 @@ export default function ChatScreen({ user, onChatLoad }) {
     };
   }, [user, otherUserId]);
 
+  useLayoutEffect(() => {
+    if (isInitialLoadRef.current && messages.length > 0 && chatContainerRef.current && !loading) {
+      // Initial load: scroll instantly without animation
+      const container = chatContainerRef.current;
+      container.scrollTop = container.scrollHeight;
+      isInitialLoadRef.current = false;
+    }
+  }, [messages, loading]);
+
   useEffect(() => {
-    scrollToBottom();
+    // Only smooth scroll for new messages after initial load
+    if (!isInitialLoadRef.current && messages.length > 0) {
+      scrollToBottom();
+    }
   }, [messages]);
 
   const scrollToBottom = () => {
