@@ -74,5 +74,6 @@ See [LICENSE.md](LICENSE.md) for license information.
 
 **Akshit Kumar**
 
---
+---
+
 Built with ❤️ using AI-powered development in Cursor IDE
