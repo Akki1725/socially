@@ -6,7 +6,7 @@ export default function Navbar({ user, onLogout }) {
       <div className="max-w-4xl mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           <Link to="/feed" className="text-2xl font-bold text-gray-900">
-            Instagram
+            Socially
           </Link>
           <div className="flex items-center gap-4">
             <Link
@@ -35,6 +35,24 @@ export default function Navbar({ user, onLogout }) {
                 >
                   Logout
                 </button>
+                <div className="flex items-center gap-2 ml-2 pl-2 border-l border-gray-300">
+                  {user.profilePicture ? (
+                    <img
+                      src={user.profilePicture}
+                      alt={user.username}
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center">
+                      <span className="text-gray-600 text-xs font-medium">
+                        {user.username.charAt(0).toUpperCase()}
+                      </span>
+                    </div>
+                  )}
+                  <span className="text-sm text-gray-700 font-medium">
+                    {user.username}
+                  </span>
+                </div>
               </>
             ) : (
               <>
