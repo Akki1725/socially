@@ -10,4 +10,3 @@ No part of this project may be copied, modified, distributed,
 or used for commercial purposes without explicit written permission
 from the author.
 ---
-

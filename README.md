@@ -43,7 +43,7 @@ Socially is a full-stack social media platform that enables users to share photo
 - **Vite** - Build tool and dev server
 
 ```
-instagram-clone/
+socially/
 ├── server/
 │   ├── index.js          # Express server setup
 │   ├── models/          # MongoDB models (User, Post, Chat)
@@ -73,7 +73,5 @@ See [LICENSE.md](LICENSE.md) for license information.
 ## Author
 
 **Akshit Kumar**
-
----
 
 Built with ❤️ using AI-powered development in Cursor IDE
