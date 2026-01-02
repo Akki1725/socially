@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 import authRoutes from './routes/auth.js';
 import userRoutes from './routes/users.js';
 import postRoutes from './routes/posts.js';
+import chatRoutes from './routes/chats.js';
 
 dotenv.config();
 
@@ -31,6 +32,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/instagram
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/chats', chatRoutes);
 
 app.set('io', io);
 

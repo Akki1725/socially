@@ -137,16 +137,23 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
           <div className="flex-1 text-center md:text-left">
             <h1 className="text-2xl font-bold mb-2">{profileUser.username}</h1>
             <p className="text-gray-600 mb-4">{profileUser.email}</p>
-            {isOwnProfile && (
-              <div className="mb-4">
+            <div className="mb-4 flex gap-2">
+              {isOwnProfile ? (
                 <button
                   onClick={() => navigate('/create')}
                   className="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-700 font-medium text-sm"
                 >
                   Create Post
                 </button>
-              </div>
-            )}
+              ) : (
+                <button
+                  onClick={() => navigate(`/chat/${userId}`)}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 font-medium text-sm"
+                >
+                  Message
+                </button>
+              )}
+            </div>
             <div className="text-gray-700">
               <span className="font-semibold">{posts.length}</span> posts
             </div>

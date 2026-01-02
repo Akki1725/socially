@@ -105,3 +105,40 @@ export const postAPI = {
   }
 };
 
+// Code generated using Cursor AI prompt
+export const chatAPI = {
+  getChats: async () => {
+    const response = await fetch(`${API_URL}/chats`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      throw new Error('Failed to fetch chats');
+    }
+    return response.json();
+  },
+
+  getChat: async (otherUserId) => {
+    const response = await fetch(`${API_URL}/chats/${otherUserId}`, {
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch chat');
+    }
+    return response.json();
+  },
+
+  sendMessage: async (otherUserId, text) => {
+    const response = await fetch(`${API_URL}/chats/${otherUserId}/messages`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify({ text })
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to send message');
+    }
+    return response.json();
+  }
+};
+

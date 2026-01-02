@@ -5,6 +5,8 @@ import SignIn from './pages/SignIn';
 import Feed from './pages/Feed';
 import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
+import ChatList from './pages/ChatList';
+import ChatScreen from './pages/ChatScreen';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -69,6 +71,14 @@ function App() {
           <Route
             path="/create"
             element={user ? <CreatePost user={user} /> : <Navigate to="/signin" />}
+          />
+          <Route
+            path="/chats"
+            element={user ? <ChatList user={user} /> : <Navigate to="/signin" />}
+          />
+          <Route
+            path="/chat/:otherUserId"
+            element={user ? <ChatScreen user={user} /> : <Navigate to="/signin" />}
           />
           <Route
             path="/"

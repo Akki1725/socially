@@ -18,6 +18,12 @@ export default function Navbar({ user, onLogout }) {
             {user ? (
               <>
                 <Link
+                  to="/chats"
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Messages
+                </Link>
+                <Link
                   to="/create"
                   className="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-700 font-medium text-sm"
                 >
