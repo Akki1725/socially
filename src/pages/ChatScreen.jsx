@@ -4,7 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { chatAPI, userAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
 
-export default function ChatScreen({ user }) {
+export default function ChatScreen({ user, onChatLoad }) {
   const { otherUserId } = useParams();
   const navigate = useNavigate();
   const [otherUser, setOtherUser] = useState(null);
@@ -68,6 +68,10 @@ export default function ChatScreen({ user }) {
       ]);
       setOtherUser(userData);
       setMessages(chatData.messages || []);
+      if (onChatLoad && chatData._id) {
+        const chatId = chatData._id.toString();
+        onChatLoad(chatId);
+      }
     } catch (error) {
       console.error('Failed to load chat:', error);
       if (error.message.includes('User not found')) {
