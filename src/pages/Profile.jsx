@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { userAPI, postAPI } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
+import { getSocket } from '../utils/socket';
 
 export default function Profile({ user: currentUser = null, onUserUpdate }) {
   const { userId } = useParams();
@@ -15,6 +16,29 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
   useEffect(() => {
     loadProfile();
   }, [userId]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    
+    socket.on('postLiked', (data) => {
+      setPosts(prevPosts => 
+        prevPosts.map(post => {
+          if (post._id === data.postId) {
+            return {
+              ...post,
+              likes: data.likes.map(likeId => ({ _id: likeId })),
+              likesCount: data.likesCount
+            };
+          }
+          return post;
+        })
+      );
+    });
+
+    return () => {
+      socket.off('postLiked');
+    };
+  }, []);
 
   const loadProfile = async () => {
     try {
@@ -155,7 +179,7 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
                   </svg>
                   <span className="text-sm font-semibold">
-                    {post.likes ? post.likes.length : 0}
+                    {post.likes?.length || post.likesCount || 0}
                   </span>
                 </div>
               </div>

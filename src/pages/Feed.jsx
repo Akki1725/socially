@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { postAPI } from '../utils/api';
+import { getSocket } from '../utils/socket';
 
 export default function Feed({ user = null }) {
   const [posts, setPosts] = useState([]);
@@ -10,6 +11,29 @@ export default function Feed({ user = null }) {
   useEffect(() => {
     loadFeed();
   }, [location.key]);
+
+  useEffect(() => {
+    const socket = getSocket();
+    
+    socket.on('postLiked', (data) => {
+      setPosts(prevPosts => 
+        prevPosts.map(post => {
+          if (post._id === data.postId) {
+            return {
+              ...post,
+              likes: data.likes.map(likeId => ({ _id: likeId })),
+              likesCount: data.likesCount
+            };
+          }
+          return post;
+        })
+      );
+    });
+
+    return () => {
+      socket.off('postLiked');
+    };
+  }, []);
 
   const loadFeed = async () => {
     try {
@@ -102,11 +126,11 @@ export default function Feed({ user = null }) {
                         </svg>
                       )}
                     </button>
-                    {post.likes && post.likes.length > 0 && (
+                    {(post.likes && post.likes.length > 0) || (post.likesCount && post.likesCount > 0) ? (
                       <span className="text-sm font-semibold text-gray-900">
-                        {post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}
+                        {(post.likes?.length || post.likesCount || 0)} {(post.likes?.length || post.likesCount || 0) === 1 ? 'like' : 'likes'}
                       </span>
-                    )}
+                    ) : null}
                   </div>
                   {post.caption && (
                     <p className="text-gray-900">

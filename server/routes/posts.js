@@ -62,6 +62,15 @@ router.post('/:id/like', authenticateToken, async (req, res) => {
       .populate('userId', 'username profilePicture')
       .populate('likes', 'username');
 
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('postLiked', {
+        postId: post._id.toString(),
+        likes: updatedPost.likes.map(like => typeof like === 'object' ? like._id.toString() : like.toString()),
+        likesCount: updatedPost.likes.length
+      });
+    }
+
     res.json(updatedPost);
   } catch (error) {
     res.status(500).json({ error: error.message });
