@@ -19,7 +19,7 @@ export default function Navbar({ user, onLogout }) {
               <>
                 <Link
                   to="/create"
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
+                  className="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-700 font-medium text-sm"
                 >
                   Create
                 </Link>

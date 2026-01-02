@@ -86,7 +86,7 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
               </div>
             )}
             {isOwnProfile && (
-              <label className="absolute bottom-0 right-0 bg-indigo-600 text-white rounded-full p-2 cursor-pointer hover:bg-indigo-700">
+              <label className="absolute bottom-0 right-0 bg-accent text-white rounded-full p-2 cursor-pointer hover:bg-accent-700">
                 <input
                   type="file"
                   accept="image/*"
@@ -117,7 +117,7 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
               <div className="mb-4">
                 <button
                   onClick={() => navigate('/create')}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 font-medium text-sm"
+                  className="px-4 py-2 bg-accent text-white rounded-md hover:bg-accent-700 font-medium text-sm"
                 >
                   Create Post
                 </button>
