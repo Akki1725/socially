@@ -4,9 +4,10 @@ import { Link } from 'react-router-dom';
 import { chatAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
 
-export default function ChatList({ user, onOpen }) {
+export default function ChatList({ user, onOpen, activeChatId }) {
   const [chats, setChats] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [unreadChatIds, setUnreadChatIds] = useState(new Set());
 
   useEffect(() => {
     if (!user) return;
@@ -22,6 +23,16 @@ export default function ChatList({ user, onOpen }) {
     const socket = getSocket();
     
     socket.on('newMessage', (data) => {
+      const userIdStr = user.id || user._id;
+      const messageSenderId = data.message.sender._id || data.message.sender;
+      const isFromOtherUser = messageSenderId.toString() !== userIdStr;
+      const incomingChatId = data.chatId.toString();
+      
+      // Mark chat as unread if message is from another user and not the active chat
+      if (isFromOtherUser && incomingChatId !== activeChatId) {
+        setUnreadChatIds(prev => new Set([...prev, incomingChatId]));
+      }
+      
       // Update chat list when new message arrives
       setChats(prevChats => {
         const chatIndex = prevChats.findIndex(
@@ -54,7 +65,7 @@ export default function ChatList({ user, onOpen }) {
     return () => {
       socket.off('newMessage');
     };
-  }, [user]);
+  }, [user, activeChatId]);
 
   const loadChats = async () => {
     try {
@@ -109,10 +120,22 @@ export default function ChatList({ user, onOpen }) {
         </div>
       ) : (
         <div className="bg-white rounded-lg border border-gray-200 divide-y divide-gray-200">
-          {chats.map((chat) => (
+          {chats.map((chat) => {
+            const isUnread = unreadChatIds.has(chat._id);
+            return (
             <Link
               key={chat._id}
               to={`/chat/${chat.otherParticipant._id}`}
+              onClick={() => {
+                // Clear unread state when chat is clicked
+                if (isUnread) {
+                  setUnreadChatIds(prev => {
+                    const next = new Set(prev);
+                    next.delete(chat._id);
+                    return next;
+                  });
+                }
+              }}
               className="flex items-center gap-4 p-4 hover:bg-gray-50 transition-colors"
             >
               {chat.otherParticipant.profilePicture ? (
@@ -133,11 +156,16 @@ export default function ChatList({ user, onOpen }) {
                   <h3 className="text-sm font-semibold text-gray-900 truncate">
                     {chat.otherParticipant.username}
                   </h3>
-                  {chat.lastMessage && (
-                    <span className="text-xs text-gray-500 flex-shrink-0 ml-2">
-                      {formatTime(chat.lastMessage.timestamp)}
-                    </span>
-                  )}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {chat.lastMessage && (
+                      <span className="text-xs text-gray-500">
+                        {formatTime(chat.lastMessage.timestamp)}
+                      </span>
+                    )}
+                    {isUnread && (
+                      <span className="w-2 h-2 bg-[#be4460] rounded-full"></span>
+                    )}
+                  </div>
                 </div>
                 {chat.lastMessage ? (
                   <p className="text-sm text-gray-600 truncate">
@@ -148,7 +176,8 @@ export default function ChatList({ user, onOpen }) {
                 )}
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

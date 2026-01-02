@@ -79,7 +79,7 @@ function AppContent({ user, onLogin, onLogout, onUserUpdate }) {
         />
         <Route
           path="/chats"
-          element={user ? <ChatList user={user} onOpen={() => setUnreadCount(0)} /> : <Navigate to="/signin" />}
+          element={user ? <ChatList user={user} onOpen={() => setUnreadCount(0)} activeChatId={activeChatId} /> : <Navigate to="/signin" />}
         />
         <Route
           path="/chat/:otherUserId"
