@@ -76,4 +76,4 @@ See [LICENSE.md](LICENSE.md) for license information.
 
 ---
 
-Built with ❤️
+Built with Love❤️
