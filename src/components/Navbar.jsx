@@ -16,6 +16,7 @@ export default function Navbar({ user, onLogout, unreadCount = 0, onMessagesOpen
   }, [location.pathname]);
 
   const isActive = (path) => location.pathname === path;
+  const isMessagesActive = () => location.pathname === '/chats' || location.pathname.startsWith('/chat/');
 
   return (
     <nav className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
@@ -43,7 +44,7 @@ export default function Navbar({ user, onLogout, unreadCount = 0, onMessagesOpen
                 <Link
                   to="/chats"
                   className={`text-sm font-medium transition-colors relative ${
-                    isActive('/chats')
+                    isMessagesActive()
                       ? 'text-gray-900 border-b-2 border-gray-900 pb-1'
                       : 'text-gray-600 hover:text-gray-900'
                   }`}
@@ -190,7 +191,7 @@ export default function Navbar({ user, onLogout, unreadCount = 0, onMessagesOpen
               to="/chats"
               onClick={() => setMobileMenuOpen(false)}
               className={`block px-4 py-2 text-sm font-medium rounded-md transition-colors relative ${
-                isActive('/chats')
+                isMessagesActive()
                   ? 'text-gray-900 bg-gray-50'
                   : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
               }`}
