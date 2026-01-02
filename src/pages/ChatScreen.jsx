@@ -172,20 +172,25 @@ export default function ChatScreen({ user, onChatLoad }) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
         </button>
-        {otherUser.profilePicture ? (
-          <img
-            src={otherUser.profilePicture}
-            alt={otherUser.username}
-            className="w-10 h-10 rounded-full object-cover"
-          />
-        ) : (
-          <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
-            <span className="text-gray-600 text-sm font-medium">
-              {otherUser.username.charAt(0).toUpperCase()}
-            </span>
-          </div>
-        )}
-        <h2 className="text-lg font-semibold text-gray-900">{otherUser.username}</h2>
+        <button
+          onClick={() => navigate(`/profile/${otherUser._id}`)}
+          className="flex items-center gap-3 flex-1 hover:opacity-80 transition-opacity"
+        >
+          {otherUser.profilePicture ? (
+            <img
+              src={otherUser.profilePicture}
+              alt={otherUser.username}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
+              <span className="text-gray-600 text-sm font-medium">
+                {otherUser.username.charAt(0).toUpperCase()}
+              </span>
+            </div>
+          )}
+          <h2 className="text-lg font-semibold text-gray-900">{otherUser.username}</h2>
+        </button>
       </div>
 
       {/* Messages */}

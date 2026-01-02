@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { postAPI } from '../utils/api';
 import { getSocket } from '../utils/socket';
@@ -6,6 +6,8 @@ import { getSocket } from '../utils/socket';
 export default function Feed({ user = null }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [heartAnimations, setHeartAnimations] = useState({});
+  const clickTimersRef = useRef({});
   const location = useLocation();
 
   useEffect(() => {
@@ -43,6 +45,51 @@ export default function Feed({ user = null }) {
       console.error('Failed to load feed:', error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDoubleClickLike = async (post) => {
+    if (!user) {
+      return;
+    }
+
+    const isLiked = post.likes && post.likes.some(like => {
+      const likeId = typeof like === 'object' ? like._id : like;
+      return likeId === user.id || likeId === user._id;
+    });
+
+    if (!isLiked) {
+      try {
+        const updatedPost = await postAPI.toggleLike(post._id);
+        setPosts(posts.map(p => p._id === post._id ? updatedPost : p));
+        
+        // Show heart animation
+        setHeartAnimations(prev => ({ ...prev, [post._id]: true }));
+        setTimeout(() => {
+          setHeartAnimations(prev => {
+            const next = { ...prev };
+            delete next[post._id];
+            return next;
+          });
+        }, 1000);
+      } catch (error) {
+        console.error('Failed to toggle like:', error);
+      }
+    }
+  };
+
+  const handleImageClick = (post) => {
+    const postId = post._id;
+    const timer = clickTimersRef.current[postId];
+
+    if (timer) {
+      clearTimeout(timer);
+      delete clickTimersRef.current[postId];
+      handleDoubleClickLike(post);
+    } else {
+      clickTimersRef.current[postId] = setTimeout(() => {
+        delete clickTimersRef.current[postId];
+      }, 300);
     }
   };
 
@@ -90,11 +137,26 @@ export default function Feed({ user = null }) {
                     {post.userId.username || 'Unknown User'}
                   </Link>
                 </div>
-                <img
-                  src={post.imageUrl}
-                  alt={post.caption || 'Post image'}
-                  className="w-full object-cover"
-                />
+                <div className="relative">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.caption || 'Post image'}
+                    className="w-full object-cover cursor-pointer"
+                    onClick={() => handleImageClick(post)}
+                  />
+                  {heartAnimations[post._id] && (
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                      <svg
+                        className="w-20 h-20 text-white"
+                        style={{ animation: 'heartFade 1s ease-out forwards' }}
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                      </svg>
+                    </div>
+                  )}
+                </div>
                 <div className="p-4">
                   <div className="flex items-center gap-4 mb-2">
                     <button
