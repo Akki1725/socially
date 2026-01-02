@@ -31,7 +31,7 @@ export default function Navbar({ user, onLogout, unreadCount = 0, onMessagesOpen
             >
               Messages
               {unreadCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="absolute -top-2 -right-2 bg-[#be4460] text-white text-xs font-semibold rounded-full min-w-[1.25rem] h-5 px-1.5 flex items-center justify-center shadow-sm transition-all duration-200 scale-100">
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>
               )}
