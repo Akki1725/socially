@@ -137,11 +137,11 @@ export default function Feed({ user = null }) {
                     {post.userId.username || 'Unknown User'}
                   </Link>
                 </div>
-                <div className="relative">
+                <div className="relative flex items-center justify-center bg-gray-100">
                   <img
                     src={post.imageUrl}
                     alt={post.caption || 'Post image'}
-                    className="w-full object-cover cursor-pointer"
+                    className="w-full max-h-[70vh] md:max-h-[600px] object-cover cursor-pointer"
                     onClick={() => handleImageClick(post)}
                   />
                   {heartAnimations[post._id] && (
