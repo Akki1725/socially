@@ -5,6 +5,17 @@ import { authenticateToken } from '../middleware/auth.js';
 
 const router = express.Router();
 
+router.get('/', authenticateToken, async (req, res) => {
+  try {
+    const users = await User.find({})
+      .select('_id username profilePicture')
+      .sort({ username: 1 });
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 router.get('/:userId', async (req, res) => {
   try {
     const user = await User.findById(req.params.userId).select('-password');

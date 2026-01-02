@@ -82,15 +82,16 @@ export default function ChatScreen({ user }) {
     e.preventDefault();
     if (!newMessage.trim() || sending) return;
 
+    const messageText = newMessage.trim();
+    setNewMessage('');
     setSending(true);
     try {
-      const sentMessage = await chatAPI.sendMessage(otherUserId, newMessage);
-      setMessages(prev => [...prev, sentMessage]);
-      setNewMessage('');
-      scrollToBottom();
+      await chatAPI.sendMessage(otherUserId, messageText);
+      // Don't add message locally - rely on Socket.IO event for real-time update
     } catch (error) {
       console.error('Failed to send message:', error);
       alert('Failed to send message. Please try again.');
+      setNewMessage(messageText);
     } finally {
       setSending(false);
     }

@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import CreatePost from './pages/CreatePost';
 import ChatList from './pages/ChatList';
 import ChatScreen from './pages/ChatScreen';
+import FindPeople from './pages/FindPeople';
 import Navbar from './components/Navbar';
 
 function App() {
@@ -79,6 +80,10 @@ function App() {
           <Route
             path="/chat/:otherUserId"
             element={user ? <ChatScreen user={user} /> : <Navigate to="/signin" />}
+          />
+          <Route
+            path="/find-people"
+            element={user ? <FindPeople user={user} /> : <Navigate to="/signin" />}
           />
           <Route
             path="/"
