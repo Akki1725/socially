@@ -48,7 +48,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
-        {user && <Navbar user={user} onLogout={handleLogout} />}
+        <Navbar user={user} onLogout={handleLogout} />
         <Routes>
           <Route
             path="/signup"
@@ -60,11 +60,11 @@ function App() {
           />
           <Route
             path="/feed"
-            element={user ? <Feed user={user} /> : <Navigate to="/signin" />}
+            element={<Feed user={user} />}
           />
           <Route
             path="/profile/:userId"
-            element={user ? <Profile user={user} onUserUpdate={updateUser} /> : <Navigate to="/signin" />}
+            element={<Profile user={user} onUserUpdate={updateUser} />}
           />
           <Route
             path="/create"
@@ -72,7 +72,7 @@ function App() {
           />
           <Route
             path="/"
-            element={<Navigate to={user ? "/feed" : "/signin"} />}
+            element={<Navigate to="/feed" />}
           />
         </Routes>
       </div>

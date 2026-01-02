@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { postAPI } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
@@ -9,6 +9,12 @@ export default function CreatePost({ user }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/signin');
+    }
+  }, [user, navigate]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

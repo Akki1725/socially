@@ -15,24 +15,43 @@ export default function Navbar({ user, onLogout }) {
             >
               Feed
             </Link>
-            <Link
-              to="/create"
-              className="text-gray-700 hover:text-gray-900"
-            >
-              Create
-            </Link>
-            <Link
-              to={`/profile/${user.id}`}
-              className="text-gray-700 hover:text-gray-900"
-            >
-              Profile
-            </Link>
-            <button
-              onClick={onLogout}
-              className="text-gray-700 hover:text-gray-900"
-            >
-              Logout
-            </button>
+            {user ? (
+              <>
+                <Link
+                  to="/create"
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Create
+                </Link>
+                <Link
+                  to={`/profile/${user.id}`}
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Profile
+                </Link>
+                <button
+                  onClick={onLogout}
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/signin"
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="text-gray-700 hover:text-gray-900"
+                >
+                  Sign Up
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>

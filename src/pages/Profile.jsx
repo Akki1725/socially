@@ -3,13 +3,13 @@ import { useParams, Link } from 'react-router-dom';
 import { userAPI } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
 
-export default function Profile({ user: currentUser, onUserUpdate }) {
+export default function Profile({ user: currentUser = null, onUserUpdate }) {
   const { userId } = useParams();
   const [profileUser, setProfileUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const isOwnProfile = currentUser.id === userId;
+  const isOwnProfile = currentUser && currentUser.id === userId;
 
   useEffect(() => {
     loadProfile();

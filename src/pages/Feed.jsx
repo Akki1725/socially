@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { postAPI } from '../utils/api';
 
-export default function Feed({ user }) {
+export default function Feed({ user = null }) {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
