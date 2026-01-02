@@ -76,4 +76,4 @@ See [LICENSE.md](LICENSE.md) for license information.
 
 ---
 
-Built with ❤️ using AI-powered development in Cursor IDE
+Built with ❤️
