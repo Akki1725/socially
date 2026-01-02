@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { userAPI } from '../utils/api';
+import { userAPI, postAPI } from '../utils/api';
 import { uploadToCloudinary } from '../utils/cloudinary';
 
 export default function Profile({ user: currentUser = null, onUserUpdate }) {
@@ -139,17 +139,26 @@ export default function Profile({ user: currentUser = null, onUserUpdate }) {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {posts.map((post) => (
-              <Link
+              <div
                 key={post._id}
-                to="/feed"
-                className="bg-white border border-gray-200 rounded-lg overflow-hidden aspect-square"
+                className="bg-white border border-gray-200 rounded-lg overflow-hidden aspect-square relative group"
               >
-                <img
-                  src={post.imageUrl}
-                  alt={post.caption}
-                  className="w-full h-full object-cover"
-                />
-              </Link>
+                <Link to="/feed">
+                  <img
+                    src={post.imageUrl}
+                    alt={post.caption}
+                    className="w-full h-full object-cover"
+                  />
+                </Link>
+                <div className="absolute bottom-0 left-0 right-0 bg-black bg-opacity-50 text-white p-2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                  </svg>
+                  <span className="text-sm font-semibold">
+                    {post.likes ? post.likes.length : 0}
+                  </span>
+                </div>
+              </div>
             ))}
           </div>
         )}

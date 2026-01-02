@@ -40,6 +40,7 @@ router.get('/:userId/posts', async (req, res) => {
   try {
     const posts = await Post.find({ userId: req.params.userId })
       .populate('userId', 'username profilePicture')
+      .populate('likes', 'username')
       .sort({ createdAt: -1 });
     res.json(posts);
   } catch (error) {

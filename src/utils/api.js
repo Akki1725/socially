@@ -90,6 +90,18 @@ export const postAPI = {
       throw new Error('Failed to fetch feed');
     }
     return response.json();
+  },
+
+  toggleLike: async (postId) => {
+    const response = await fetch(`${API_URL}/posts/${postId}/like`, {
+      method: 'POST',
+      headers: getAuthHeaders()
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to toggle like');
+    }
+    return response.json();
   }
 };
 

@@ -71,14 +71,50 @@ export default function Feed({ user = null }) {
                   alt={post.caption || 'Post image'}
                   className="w-full object-cover"
                 />
-                {post.caption && (
-                  <div className="p-4">
+                <div className="p-4">
+                  <div className="flex items-center gap-4 mb-2">
+                    <button
+                      onClick={async () => {
+                        if (!user) {
+                          alert('Sign in to like');
+                          return;
+                        }
+                        try {
+                          const updatedPost = await postAPI.toggleLike(post._id);
+                          setPosts(posts.map(p => p._id === post._id ? updatedPost : p));
+                        } catch (error) {
+                          console.error('Failed to toggle like:', error);
+                        }
+                      }}
+                      className="focus:outline-none"
+                      title={!user ? 'Sign in to like' : ''}
+                    >
+                      {user && post.likes && post.likes.some(like => {
+                        const likeId = typeof like === 'object' ? like._id : like;
+                        return likeId === user.id || likeId === user._id;
+                      }) ? (
+                        <svg className="w-6 h-6 text-accent fill-current" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+                        </svg>
+                      ) : (
+                        <svg className="w-6 h-6 text-gray-900" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                      )}
+                    </button>
+                    {post.likes && post.likes.length > 0 && (
+                      <span className="text-sm font-semibold text-gray-900">
+                        {post.likes.length} {post.likes.length === 1 ? 'like' : 'likes'}
+                      </span>
+                    )}
+                  </div>
+                  {post.caption && (
                     <p className="text-gray-900">
                       <span className="font-semibold mr-2">{post.userId.username || 'Unknown User'}</span>
                       {post.caption}
                     </p>
-                  </div>
-                )}
+                  )}
+                </div>
               </div>
             ))}
         </div>
